@@ -1,0 +1,21 @@
+{
+  "node": {
+    "id": "hoth",
+    "mqtt": {
+      "brokerUrl": "mqtt://192.168.1.121:1883",
+      "username": "mosquitto_client",
+      "password": "mosquitto_password"
+    }
+  },
+  "devices": [
+    {
+      "type": "switch",
+      "id": "watering_pump_1",
+      "io": {
+        "switchOutPin": 14,
+        "switchInPin": 19,
+        "availabilityPin": 16
+      }
+    }
+  ]
+}

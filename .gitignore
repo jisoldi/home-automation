@@ -1,0 +1,12 @@
+# JetBrains
+.idea/
+*.iml
+
+# Node
+node_modules/
+
+# JS Build
+out/
+
+# macos
+.DS_Store

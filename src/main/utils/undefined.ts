@@ -1,0 +1,1 @@
+export const nonUndefined = <T>(value: T | undefined, defaultValue: T): T => value !== undefined ? value : defaultValue

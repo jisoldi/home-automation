@@ -1,0 +1,33 @@
+{
+  "name": "@jisoldi/home-automation",
+  "version": "1.0.0",
+  "description": "Home automation utils and apps",
+  "main": "index.js",
+  "scripts": {
+    "tsc:src:watch": "tsc --watch",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jisoldi/home-automation.git"
+  },
+  "keywords": [
+    "home",
+    "automation",
+    "mqtt"
+  ],
+  "author": "jisoldi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jisoldi/home-automation/issues"
+  },
+  "homepage": "https://github.com/jisoldi/home-automation#readme",
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@types/mqtt": "0.0.34",
+    "mqtt": "^1.14.1",
+    "rxjs": "^6.6.6"
+  }
+}
