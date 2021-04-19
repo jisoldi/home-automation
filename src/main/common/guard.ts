@@ -1,0 +1,1 @@
+export type Guard<T, R extends T> = (value: T) => value is R

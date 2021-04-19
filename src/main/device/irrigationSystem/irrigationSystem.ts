@@ -1,15 +1,15 @@
-import { distinctUntilChanged, map, multicast, scan } from 'rxjs/operators'
+import { map, scan } from 'rxjs/operators'
 import { merge, Subject } from 'rxjs'
 import {
-  setAvailabilityAction,
   handleIrrigationAction,
   InitialState,
+  setAvailabilityAction,
   setStateAction,
   State,
   TickAction,
   ToggleStateAction,
 } from './state'
-import { AvailableState, UnavailableState } from '../../common/availabilty'
+import { isAvailable } from '../../common/availabilty'
 import { DeviceContext } from '../devices'
 import { loggerToTap } from '../../logging/tapLogger'
 import { createIntervalMoistureSensor, isMoist } from '../../component/moistureSensor/binaryMoistureSensor'
@@ -77,19 +77,19 @@ export const createIrrigationSystem = (config: IrrigationSystemConfig, {mqtt, mr
     .subscribe(states)
 
   states
-    .pipe(map(state => state.isOn ? OnState : OffState),)
+    .pipe(map(state => state.pumpState))
     .subscribe(hassSwitch.stateObserver)
 
   states
-    .pipe(map(state => state.isAvailable ? AvailableState : UnavailableState),)
+    .pipe(map(state => state.availability))
     .subscribe(hassSwitch.availabilityObserver)
 
   states
-    .pipe(map(state => state.isAvailable ? OnState : OffState),)
+    .pipe(map(state => isAvailable(state.availability) ? OnState : OffState))
     .subscribe(hassSensor.stateObserver)
 
   states
-    .pipe(map(state => state.isAvailable && state.isOn ? OnState : OffState))
+    .pipe(map(state => isAvailable(state.availability) ? state.pumpState : OffState))
     .subscribe(pumpObserver)
 
   // Discovery

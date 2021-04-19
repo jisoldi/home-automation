@@ -1,6 +1,9 @@
+import { invertState, OffState, OnOffState, OnState } from '../../common/onOffState'
+import { AvailabilityState, AvailableState, UnavailableState } from '../../common/availabilty'
+
 export type State = {
-  isOn: boolean
-  isAvailable: boolean
+  pumpState: OnOffState
+  availability: AvailabilityState
 }
 
 export type IrrigationAction =
@@ -9,28 +12,32 @@ export type IrrigationAction =
   | { type: 'toggle' }
   | { type: 'availability', isAvailable: boolean }
 
-export const TickAction: IrrigationAction = { type: 'tick' }
+export const TickAction: IrrigationAction = {type: 'tick'}
 
-export const ToggleStateAction: IrrigationAction = { type: 'toggle' }
+export const ToggleStateAction: IrrigationAction = {type: 'toggle'}
 
-export const setStateAction = (isOn: boolean): IrrigationAction => ({ type: 'set', isOn })
+export const setStateAction = (isOn: boolean): IrrigationAction => ({type: 'set', isOn})
 
-export const setAvailabilityAction = (isAvailable: boolean): IrrigationAction => ({ type: 'availability', isAvailable })
+export const setAvailabilityAction = (isAvailable: boolean): IrrigationAction => ({type: 'availability', isAvailable})
 
 export const InitialState: State = {
-  isOn: false,
-  isAvailable: false,
+  pumpState: OffState,
+  availability: UnavailableState,
 }
 
-export const handleIrrigationAction = (state: State, event: IrrigationAction): State => {
-  switch (event.type) {
+export const handleIrrigationAction = (state: State, action: IrrigationAction): State => {
+  switch (action.type) {
     case 'tick':
       return state
     case 'set':
-      return {...state, isOn: event.isOn && state.isAvailable}
+      return {...state, pumpState: action.isOn && state.availability ? OnState : OffState}
     case 'toggle':
-      return {...state, isOn: !state.isOn && state.isAvailable}
+      return {...state, pumpState: state.availability ? invertState(state.pumpState) : OffState}
     case 'availability':
-      return {...state, isAvailable: event.isAvailable, isOn: event.isAvailable && state.isOn}
+      return {
+        ...state,
+        availability: action.isAvailable ? AvailableState : UnavailableState,
+        pumpState: action.isAvailable ? state.pumpState : OffState,
+      }
   }
 }

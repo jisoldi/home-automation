@@ -1,4 +1,4 @@
-import { BinaryState } from './binaryState'
+import { BinaryState, createSimpleBinaryStateGuard } from './binaryState'
 
 export const OnState = 'on' as const
 export type OnStateType = typeof OnState
@@ -8,6 +8,6 @@ export type OffStateType = typeof OffState
 
 export type OnOffState = BinaryState<OnStateType, OffStateType>
 
-export const isOnState = (state: OnOffState): state is OnStateType => state === OnState
+export const isOnState = createSimpleBinaryStateGuard<OnStateType, OffStateType>(OnState)
 
-export const isOffState = (state: OnOffState): state is OffStateType => state === OffState
+export const invertState = (state: OnOffState): OnOffState => isOnState(state) ? OffState : OnState
