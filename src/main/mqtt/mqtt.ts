@@ -1,7 +1,7 @@
 import { Client, ClientPublishOptions } from 'mqtt'
-import { Observable, Subject, Subscriber } from 'rxjs'
+import { Observable, Observer, Subject, Subscriber } from 'rxjs'
 import { filter } from 'rxjs/operators'
-import { AvailabilityConfig } from './mqtthomeAssistant'
+import { AvailabilityConfig } from '../hass/mqtthomeAssistant'
 
 export type MqttInMessage = {
   topic: string
@@ -31,13 +31,13 @@ export const genericPublish = (client: Client, topic: string, message: string | 
   return typeof message === 'string' ? client.publish(topic, message, options) : client.publish(topic, message, options)
 }
 
-export const createMqttSubscriber = (client: Client, options?: ClientPublishOptions): Subscriber<MqttOutMessage> =>
+export const createMqttObserver = (client: Client, options?: ClientPublishOptions): Observer<MqttOutMessage> =>
   new Subscriber<MqttOutMessage>(({topic, message}) => genericPublish(client, topic, message, options))
 
 export const topicFilter = (expected: string) => filter(({topic}: MqttInMessage) => topic === expected)
 
 export class Mqtt {
-  constructor(private readonly client: Client, public readonly availabilityConfig: AvailabilityConfig) {}
+  constructor(readonly client: Client, readonly availabilityConfig: AvailabilityConfig) {}
 
   observable: Observable<MqttInMessage> = createMqttObservable(this.client)
 
@@ -45,7 +45,5 @@ export class Mqtt {
 
   reconnectObservable: Observable<Client> = createMqttConnectObservable(this.client, 'reconnect')
 
-  subscriber(options?: ClientPublishOptions): Subscriber<MqttOutMessage> {
-    return createMqttSubscriber(this.client, options)
-  }
+  observer(options?: ClientPublishOptions): Observer<MqttOutMessage> {return createMqttObserver(this.client, options)}
 }

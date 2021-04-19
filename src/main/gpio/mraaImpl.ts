@@ -1,20 +1,13 @@
-import { Observable, of, Subject, Subscriber, interval } from 'rxjs'
-import * as mraa from 'mraa'
-import { DigitalValue, Dir, DIR_IN, DIR_OUT, Edge, EDGE_BOTH, Gpio, Mode } from 'mraa'
+import { interval, Observable, Subscriber } from 'rxjs'
+import { DIR_IN, DIR_OUT, EDGE_BOTH, Gpio } from 'mraa'
+import mraa from 'mraa'
+import { createGpioSubscriber, createIrsObservable, createSingleGpioReadObservable } from './mraaUtils'
 import { map } from 'rxjs/operators'
+import { Mraa } from './mraa'
+import { DigitalValue } from './digitalValue'
+import { Dir, Edge, Mode } from './mraaConstants'
 
-export const createGpioSubscriber = (gpio: Gpio): Subscriber<DigitalValue> =>
-  new Subscriber(gpio.write.bind(gpio))
-
-export const createIrsObservable = (gpio: Gpio, mode: Edge): Observable<DigitalValue> => {
-  const subject = new Subject<DigitalValue>()
-  gpio.isr(mode, () => subject.next(gpio.read()))
-  return subject.asObservable()
-}
-
-export const createSingleGpioReadObservable = (gpio: Gpio): Observable<DigitalValue> => of(gpio.read())
-
-export class Mraa {
+export class MraaImpl implements Mraa {
   setGpioAsOut(pin: number): Subscriber<DigitalValue> {
     const gpio = new mraa.Gpio(pin)
     gpio.dir(DIR_OUT)
@@ -23,7 +16,7 @@ export class Mraa {
   }
 
   listenGpioChanges(pin: number, edge: Edge = EDGE_BOTH, mode?: Mode): Observable<DigitalValue> {
-    const gpio = Mraa.setPinAs(pin, DIR_IN, mode)
+    const gpio = MraaImpl.setPinAs(pin, DIR_IN, mode)
     return createIrsObservable(gpio, edge)
   }
 
@@ -32,7 +25,7 @@ export class Mraa {
   }
 
   readInterval(pin: number, period: number, mode?: Mode): Observable<DigitalValue> {
-    const gpio = Mraa.setPinAs(pin, DIR_IN, mode)
+    const gpio = MraaImpl.setPinAs(pin, DIR_IN, mode)
 
     return interval(period)
       .pipe(map(() => gpio.read()))

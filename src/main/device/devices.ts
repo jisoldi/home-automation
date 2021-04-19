@@ -1,9 +1,9 @@
-import { createSwitch, SwitchConfig } from './switch'
-import { Mqtt } from '../mqtt'
-import { Mraa } from '../mraa'
+import { createIrrigationSystem, IrrigationSystemConfig } from './irrigationSystem/irrigationSystem'
+import { Mqtt } from '../mqtt/mqtt'
+import { Mraa } from '../gpio/mraa'
 import { Logger } from '../logging/logger'
 
-export type DeviceConfig = SwitchConfig
+export type DeviceConfig = IrrigationSystemConfig
 
 export type DeviceContext = {
   logger: Logger
@@ -12,5 +12,5 @@ export type DeviceContext = {
 }
 
 export const createDevice = (config: DeviceConfig, context: DeviceContext) => {
-  createSwitch(config, context)
+  createIrrigationSystem(config, context)
 }

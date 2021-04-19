@@ -9,7 +9,7 @@
   },
   "devices": [
     {
-      "type": "switch",
+      "type": "irrigation-system",
       "id": "watering_pump_1",
       "io": {
         "switchOutPin": 14,

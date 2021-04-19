@@ -18,7 +18,7 @@ type DeviceWithAvailabilityMode = {
 
 type DeviceWithAvailability = DeviceWithAvailabilityMode & DeviceWithAvailabilityTopic
 
-type BinarySensorDeviceClass =
+export type BinarySensorDeviceClass =
   | 'battery'
   | 'battery_charging'
   | 'cold'

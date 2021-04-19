@@ -1,17 +1,17 @@
 import * as mqtt from 'mqtt'
 import { createDevice, DeviceContext } from './device/devices'
-import { Mraa } from './mraa'
-import { Mqtt, MqttOutMessage } from './mqtt'
+import { Mqtt, MqttOutMessage } from './mqtt/mqtt'
 import { Config } from './config'
 import * as fs from 'fs'
-import { AvailabilityConfig } from './mqtthomeAssistant'
-import { AvailableState, UnavailableState } from './availabilty'
+import { AvailabilityConfig } from './hass/mqtthomeAssistant'
+import { AvailableState, UnavailableState } from './common/availabilty'
 import { map } from 'rxjs/operators'
 import { merge } from 'rxjs'
 import { ConsoleLogger } from './logging/consoleLogger'
 import { DefaultDateProvider } from './date/defaultDateProvider'
 import { nonUndefined } from './utils/undefined'
 import { SilentLogger } from './logging/silentLogger'
+import { MraaImpl } from './gpio/mraaImpl'
 
 const args = process.argv.slice(2)
 
@@ -50,14 +50,14 @@ const mqttWrapper = new Mqtt(mqttClient, availabilityConfig)
 
 merge(mqttWrapper.connectObservable, mqttWrapper.reconnectObservable)
   .pipe(map((): MqttOutMessage => ({topic: nodeAvailabilityTopic, message: AvailableState})))
-  .subscribe(mqttWrapper.subscriber({retain: true}))
+  .subscribe(mqttWrapper.observer({retain: true}))
 
 const logger = nonUndefined(mainConfig.node.log, false) ?
   new ConsoleLogger(new DefaultDateProvider()) : new SilentLogger()
 
 const context: DeviceContext = {
   mqtt: mqttWrapper,
-  mraa: new Mraa(),
+  mraa: new MraaImpl(),
   logger,
 }
 

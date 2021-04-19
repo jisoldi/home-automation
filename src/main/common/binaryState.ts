@@ -1,0 +1,1 @@
+export type BinaryState<A, B> = A | B
