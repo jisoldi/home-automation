@@ -1,5 +1,5 @@
 import { Logger } from './logger'
-import { DateProvider } from '../date/dateProvider'
+import { DateProvider } from '../common/date/dateProvider'
 
 export class ConsoleLogger implements Logger {
   constructor(private readonly provider: DateProvider) {}

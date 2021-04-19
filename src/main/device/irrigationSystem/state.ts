@@ -1,5 +1,5 @@
 import { invertState, OffState, OnOffState, OnState } from '../../common/onOffState'
-import { AvailabilityState, AvailableState, UnavailableState } from '../../common/availabilty'
+import { AvailabilityState, AvailableState, isAvailable, UnavailableState } from '../../common/availabilty'
 
 export type State = {
   pumpState: OnOffState
@@ -30,9 +30,9 @@ export const handleIrrigationAction = (state: State, action: IrrigationAction): 
     case 'tick':
       return state
     case 'set':
-      return {...state, pumpState: action.isOn && state.availability ? OnState : OffState}
+      return {...state, pumpState: action.isOn && isAvailable(state.availability) ? OnState : OffState}
     case 'toggle':
-      return {...state, pumpState: state.availability ? invertState(state.pumpState) : OffState}
+      return {...state, pumpState: isAvailable(state.availability) ? invertState(state.pumpState) : OffState}
     case 'availability':
       return {
         ...state,

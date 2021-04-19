@@ -4,15 +4,14 @@ import { DigitalValue, isOne } from '../../gpio/digitalValue'
 import { IntervalBinarySensor } from '../binarySensor/intervalBinarySensor'
 import { inGpioInfo } from '../../gpio/gpioInfo'
 import { Mode } from '../../gpio/mraaConstants'
+import { BinaryState, createSimpleBinaryStateGuard } from '../../common/binaryState'
 
-export const Moist = 'Moist' as const
-export const Dry = 'Dry' as const
+export const Moist = 'moist' as const
+export const Dry = 'dry' as const
 
-export type MoistureState = typeof Moist | typeof Dry
+export type MoistureState = BinaryState<typeof Moist, typeof Dry>
 
-export const isMoist = (value: MoistureState): value is typeof Moist => value === Moist
-
-export const isDry = (value: MoistureState): value is typeof Dry => value === Dry
+export const isMoist = createSimpleBinaryStateGuard<typeof Moist, typeof Dry>(Moist)
 
 export type  BinaryMoistureSensor = BinarySensor<typeof Moist, typeof Dry>
 
