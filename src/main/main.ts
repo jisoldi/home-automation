@@ -12,6 +12,8 @@ import { DefaultDateProvider } from './common/date/defaultDateProvider'
 import { nonUndefined } from './common/utils/undefined'
 import { SilentLogger } from './logging/silentLogger'
 import { MraaImpl } from './gpio/mraaImpl'
+import * as mraa from 'mraa'
+import { DIR_IN, DIR_OUT, MODE_PULLDOWN, MODE_PULLUP, MODE_STRONG } from 'mraa'
 
 const args = process.argv.slice(2)
 
@@ -60,5 +62,8 @@ const context: DeviceContext = {
   mraa: new MraaImpl(),
   logger,
 }
+
+const gpio = new mraa.Gpio(15)
+console.log(gpio.read())
 
 mainConfig.devices.forEach(device => createDevice(device, context))

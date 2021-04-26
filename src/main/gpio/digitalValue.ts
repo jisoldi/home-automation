@@ -8,8 +8,6 @@ export type OneValueType = typeof OneValue
 
 export type DigitalValue = BinaryState<ZeroValueType, OneValueType>
 
-export const isZero = createSimpleBinaryStateGuard<ZeroValueType, OneValueType>(ZeroValue)
-
 export const isOne = createSimpleBinaryStateGuard<OneValueType, ZeroValueType>(OneValue)
 
-export const negate = (value: DigitalValue): DigitalValue => isZero(value) ? OneValue : ZeroValue
+export const negate = (value: DigitalValue): DigitalValue => isOne(value) ? ZeroValue : OneValue

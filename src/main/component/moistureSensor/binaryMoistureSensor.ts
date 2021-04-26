@@ -3,7 +3,6 @@ import { BinarySensor } from '../binarySensor/binarySensor'
 import { DigitalValue, isOne } from '../../gpio/digitalValue'
 import { IntervalBinarySensor } from '../binarySensor/intervalBinarySensor'
 import { inGpioInfo } from '../../gpio/gpioInfo'
-import { Mode } from '../../gpio/mraaConstants'
 import { BinaryState, createSimpleBinaryStateGuard } from '../../common/binaryState'
 
 export const Moist = 'moist' as const
@@ -17,7 +16,7 @@ export type  BinaryMoistureSensor = BinarySensor<typeof Moist, typeof Dry>
 
 export const DefaultInterval = 1000 // milliseconds
 
-const mapToMoistureState = (value: DigitalValue): MoistureState => isOne(value) ? Moist : Dry
+const mapToMoistureState = (value: DigitalValue): MoistureState => isOne(value) ? Dry : Moist
 
 export const createIntervalMoistureSensor = (mraa: Mraa, pin: number, interval = DefaultInterval): BinaryMoistureSensor =>
-  new IntervalBinarySensor(mraa, inGpioInfo(pin, Mode.PullUp), interval, mapToMoistureState)
+  new IntervalBinarySensor(mraa, inGpioInfo(pin), interval, mapToMoistureState)

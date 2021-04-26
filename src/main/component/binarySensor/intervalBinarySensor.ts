@@ -11,11 +11,11 @@ export class IntervalBinarySensor<A, B> implements BinarySensor<A, B> {
 
   constructor(
     private readonly mraa: Mraa,
-    {pin, dir, mode}: InGpioInfo,
+    { pin }: InGpioInfo,
     period: number,
     stateMapper: (value: DigitalValue) => BinaryState<A, B>,
   ) {
-    this.observable = mraa.readInterval(pin, period, mode)
+    this.observable = mraa.readInterval(pin, period)
       .pipe(
         distinctUntilChanged(),
         map(stateMapper)

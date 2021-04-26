@@ -29,6 +29,8 @@ export const createHassSwitchDiscoveryConfig = (
     icon: icon,
     state_on: OnState,
     state_off: OffState,
+    payload_on: OnState,
+    payload_off: OffState,
     availability_mode: 'all',
     availability: availability,
   })

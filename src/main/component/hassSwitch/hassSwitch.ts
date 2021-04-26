@@ -23,7 +23,7 @@ const onOffStateGuard: StateGuard<OnOffState> = (message): message is OnOffState
 export const createHassSwitch = (mqtt: Mqtt, baseTopic: string): HassSwitch => {
 
   const sensor = createHassBinarySensor(mqtt, baseTopic)
-  const setObservable = createMqttObservable<OnOffState>(mqtt, `${baseTopic}/state`, onOffStateGuard)
+  const setObservable = createMqttObservable<OnOffState>(mqtt, `${baseTopic}/set`, onOffStateGuard)
 
   const subscription = setObservable.subscription
     .add(sensor.subscription)

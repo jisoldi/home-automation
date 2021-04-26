@@ -3,6 +3,7 @@ import { HassBinarySensor } from './hassBinarySensor'
 import { merge, SubscriptionLike } from 'rxjs'
 import { Mqtt, outMessage } from '../../mqtt/mqtt'
 import { map } from 'rxjs/operators'
+import { OffState, OnState } from '../../common/onOffState'
 
 export type BinarySensorDiscoveryMetadata = {
   name: string,
@@ -24,6 +25,8 @@ export const createHassBinarySensorDiscoveryConfig = (
     state_topic: stateTopic,
     device_class: deviceClass,
     availability: availability,
+    payload_on: OnState,
+    payload_off: OffState,
   })
 
 export const createHassBinarySensorDiscovery = (mqtt: Mqtt, binarySensor: HassBinarySensor, metadata: BinarySensorDiscoveryMetadata): SubscriptionLike => {

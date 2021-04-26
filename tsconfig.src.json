@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "/Volumes/HothShared/irrigation-controller/lib",
-    //    "outDir": "./out/lib",
+//    "outDir": "./out/lib",
     "rootDir": "./src/main",
 
     "tsBuildInfoFile": "./out/cache/build-cache",

@@ -15,7 +15,7 @@ export type HassBinarySensor = {
 }
 
 export const createHassBinarySensor = (mqtt: Mqtt, baseTopic: string): HassBinarySensor => {
-  const stateObserver = createMqttObserver<OnOffState>(mqtt, `${baseTopic}/set`)
+  const stateObserver = createMqttObserver<OnOffState>(mqtt, `${baseTopic}/state`)
   const availabilityObserver = createMqttObserver<AvailabilityState>(mqtt, `${baseTopic}/availability`)
 
   const subscription = stateObserver.subscription

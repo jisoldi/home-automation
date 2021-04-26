@@ -14,10 +14,10 @@ export class EdgeBinarySensor<A, B> implements BinarySensor<A, B> {
 
   constructor(
     private readonly mraa: Mraa,
-    {pin, dir, mode}: InGpioInfo,
+    { pin }: InGpioInfo,
     stateMapper: (value: DigitalValue) => BinaryState<A, B>,
   ) {
-    this.observable = mraa.listenGpioChanges(pin, Edge.Both, mode)
+    this.observable = mraa.listenGpioChanges(pin, Edge.Both)
       .pipe(
         debounceTime(DebounceTime),
         distinctUntilChanged(),

@@ -18,10 +18,10 @@ import { createHassSwitch } from '../../component/hassSwitch/hassSwitch'
 import { isOnState, OffState, OnState } from '../../common/onOffState'
 import { createOnOffEdgeSensor } from '../../component/binarySensor/onOffSensor'
 import { inGpioInfo } from '../../gpio/gpioInfo'
-import { Mode } from '../../gpio/mraaConstants'
 import { createHassBinarySensor } from '../../component/hassBinarySensor/hassBinarySensor'
 import { createHassBinarySensorDiscovery } from '../../component/hassBinarySensor/hassSwitchDiscovery'
 import { createBinaryOut } from '../../component/binaryOut/binaryOut'
+import { ZeroValue } from '../../gpio/digitalValue'
 
 export type IrrigationSystemConfig = {
   type: 'irrigation-system'
@@ -47,10 +47,10 @@ export const createIrrigationSystem = (config: IrrigationSystemConfig, {mqtt, mr
   const loggerTap = loggerToTap(logger)
 
   const moistureSensor = createIntervalMoistureSensor(mraa, config.io.availabilityPin)
-  const switchSensor = createOnOffEdgeSensor(mraa, inGpioInfo(config.io.switchInPin), Mode.PullUp)
+  const switchSensor = createOnOffEdgeSensor(mraa, inGpioInfo(config.io.switchInPin), ZeroValue)
   const hassSwitch = createHassSwitch(mqtt, switchBaseTopic)
   const hassSensor = createHassBinarySensor(mqtt, sensorBaseTopic)
-  const pumpObserver = createBinaryOut(mraa, config.io.switchOutPin, 0)
+  const pumpObserver = createBinaryOut(mraa, config.io.switchOutPin, 1)
 
   const setStateActions = hassSwitch.setObservable
     .pipe(map(setState => setStateAction(isOnState(setState))))
@@ -101,7 +101,7 @@ export const createIrrigationSystem = (config: IrrigationSystemConfig, {mqtt, mr
     switchId,
   })
 
-  createHassBinarySensorDiscovery(mqtt, hassSwitch, {
+  createHassBinarySensorDiscovery(mqtt, hassSensor, {
     name: `${Name}  reservoir`,
     deviceClass: 'moisture',
     deviceId: id,
