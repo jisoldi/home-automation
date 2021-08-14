@@ -12,7 +12,11 @@ import {
 import { isAvailable } from '../../common/availabilty'
 import { DeviceContext } from '../devices'
 import { loggerToTap } from '../../logging/tapLogger'
-import { createIntervalMoistureSensor, isMoist } from '../../component/moistureSensor/binaryMoistureSensor'
+import {
+  createHysteresisMoistureSensor,
+  createIntervalMoistureSensor,
+  isMoist,
+} from '../../component/moistureSensor/binaryMoistureSensor'
 import { createHassMqttSwitchDiscovery } from '../../component/hassSwitch/hassSwitchDiscovery'
 import { createHassSwitch } from '../../component/hassSwitch/hassSwitch'
 import { isOnState, OffState, OnState } from '../../common/onOffState'
@@ -29,7 +33,8 @@ export type IrrigationSystemConfig = {
   io: {
     switchOutPin: number
     switchInPin: number
-    availabilityPin: number
+    availabilityPin1: number
+    availabilityPin2: number
   }
 }
 
@@ -46,7 +51,9 @@ export const createIrrigationSystem = (config: IrrigationSystemConfig, {mqtt, mr
 
   const loggerTap = loggerToTap(logger)
 
-  const moistureSensor = createIntervalMoistureSensor(mraa, config.io.availabilityPin)
+  const moistureSensor1 = createIntervalMoistureSensor(mraa, config.io.availabilityPin1)
+  const moistureSensor2 = createIntervalMoistureSensor(mraa, config.io.availabilityPin2)
+  const moistureSensor = createHysteresisMoistureSensor(moistureSensor1, moistureSensor2)
   const switchSensor = createOnOffEdgeSensor(mraa, inGpioInfo(config.io.switchInPin), ZeroValue)
   const hassSwitch = createHassSwitch(mqtt, switchBaseTopic)
   const hassSensor = createHassBinarySensor(mqtt, sensorBaseTopic)
